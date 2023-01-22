@@ -23,7 +23,7 @@
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
                     <a class="dropdown-item" href="javascript:void(0)">Move</a>
-                    <a class="dropdown-item" href="javascript:void(0)">Copy</a>
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#copyFolder" path="<?php echo $current_path."/".$file; ?>" onclick="foldercopy(this)" folder="<?php echo $file;?>">Copy</a>
                     <a class="dropdown-item" href="?d=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file  ?>" >Remove</a>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                 <input type="checkbox" class="custom-control-input" />
                 <span class="custom-control-label"></span>
             </label>
-            <div class="file-item-img" style="background-image: url(<?php echo $web_url; ?>file.php?file=<?php  echo ($current_path."/".$file); ?>);background-size:cover;"></div>
+            <div class="file-item-img" style="background-image: url(<?php echo $web_url; ?>?file=<?php  echo ($current_path."/".$file); ?>);background-size:cover;"></div>
             <a href="javascript:void(0)" class="file-item-name">
                 <?php echo $file ?>
             </a>
@@ -47,9 +47,9 @@
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
-                    <a class="dropdown-item" href="javascript:void(0)">Copy</a>
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#copyFolder" path="<?php echo $current_path."/".$file; ?>" onclick="foldercopy(this)" folder="<?php echo $file;?>" >Copy</a>
                     <a class="dropdown-item" href="?d=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file  ?>">Remove</a>
-                    <a class="dropdown-item" href="<?php echo $web_url; ?>file.php?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
+                    <a class="dropdown-item" href="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
                 <input type="checkbox" class="custom-control-input" />
                 <span class="custom-control-label"></span>
             </label>
-            <video style="width : 100%" src="<?php echo $web_url; ?>file.php?file=<?php  echo ($current_path."/".$file); ?>"></video>
+            <video style="width : 100%" src="<?php echo $web_url; ?>?file=<?php  echo ($current_path."/".$file); ?>"></video>
             <!-- <div class="file-item-icon far fa-file-video text-secondary">
             </div> -->
             <a href="javascript:void(0)" class="file-item-name">
@@ -73,9 +73,9 @@
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
-                    <a class="dropdown-item" href="javascript:void(0)">Copy</a>
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#copyFolder" path="<?php echo $current_path."/".$file; ?>" onclick="foldercopy(this)" folder="<?php echo $file;?>">Copy</a>
                     <a class="dropdown-item" href="?d=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file  ?>">Remove</a>
-                    <a class="dropdown-item" href="<?php echo $web_url; ?>file.php?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
+                    <a class="dropdown-item" href="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
                 </div>
             </div>
         </div>
@@ -95,9 +95,9 @@
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
-                    <a class="dropdown-item" href="javascript:void(0)">Copy</a>
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#copyFolder" path="<?php echo $current_path."/".$file; ?>" onclick="foldercopy(this)" folder="<?php echo $file;?>">Copy</a>
                     <a class="dropdown-item" href="?d=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file  ?>">Remove</a>
-                    <a class="dropdown-item" href="<?php echo $web_url; ?>file.php?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
+                    <a class="dropdown-item" href="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
                 </div>
             </div>
         </div>
@@ -119,37 +119,13 @@
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
-                    <a class="dropdown-item" href="javascript:void(0)">Copy</a>
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#copyFolder" path="<?php echo $current_path."/".$file; ?>" onclick="foldercopy(this)" folder="<?php echo $file;?>">Copy</a>
                     <a class="dropdown-item" href="?d=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file  ?>">Remove</a>
-                    <a class="dropdown-item" href="<?php echo $web_url; ?>file.php?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
+                    <a class="dropdown-item" href="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
                 </div>
             </div>
         </div>
-                    
-                    <?php
-                    }elseif ($ext == "css") { ?>
-                              <div class="file-item">
-            <div class="file-item-select-bg bg-primary"></div>
-            <label class="file-item-checkbox custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" />
-                <span class="custom-control-label"></span>
-            </label>
-            <img src="<?php echo fm_icon($ext); ?>" alt="folder" class="file-item-icon far fa-folder text-secondary">
-            <a href="<?php echo $web_url; ?>?edit=<?php  echo ($current_path."/".$file); ?>" class="file-item-name"  >
-                <?php echo $file; ?>
-            </a>
-            <div class="file-item-changed">02/27/2018</div>
-            <div class="file-item-actions btn-group">
-                <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
-                <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
-                    <a class="dropdown-item" href="javascript:void(0)">Copy</a>
-                    <a class="dropdown-item" href="?d=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file  ?>">Remove</a>
-                    <a class="dropdown-item" href="<?php echo $web_url; ?>file.php?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
-                </div>
-            </div>
-        </div>
-                   
+                     
                   <?php 
                    }else if(in_array($ext, $files_ext)){ ?>
         <div class="file-item">
@@ -167,9 +143,9 @@
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
-                    <a class="dropdown-item" href="javascript:void(0)">Copy</a>
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#copyFolder" path="<?php echo $current_path."/".$file; ?>" onclick="foldercopy(this)" folder="<?php echo $file;?>">Copy</a>
                     <a class="dropdown-item" href="?d=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file  ?>">Remove</a>
-                    <a class="dropdown-item" href="<?php echo $web_url; ?>file.php?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
+                    <a class="dropdown-item" href="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
                 </div>
             </div>
         </div>
@@ -198,9 +174,9 @@
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
-                    <a class="dropdown-item" href="javascript:void(0)">Copy</a>
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#copyFolder" path="<?php echo $current_path."/".$file; ?>" onclick="foldercopy(this)" folder="<?php echo $file;?>">Copy</a>
                     <a class="dropdown-item" href="?d=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file  ?>">Remove</a>
-                    <a class="dropdown-item" href="<?php echo $web_url; ?>file.php?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
+                    <a class="dropdown-item" href="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>">Download</a>
                 </div>
             </div>
         </div>

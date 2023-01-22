@@ -1,8 +1,48 @@
 <?php
+// display image/video file
+if(isset($_GET['file'])){
+  echo readfile($_GET['file']);
+  exit;
+}
+// Download file
+if(isset($_GET["dw"])){
+  $file = $_GET["dw"];
+
+if (file_exists($file)) {
+  header('Content-Description: File Transfer');
+  header('Content-Type: application/octet-stream');
+  header('Content-Disposition: attachment; filename='.basename($file));
+  header('Content-Transfer-Encoding: binary');
+  header('Expires: 0');
+  header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+  header('Pragma: public');
+  header('Content-Length: ' . filesize($file));
+  ob_clean();
+  flush();
+  readfile($file);
+  exit;
+}
+}
+
+?>
+
+<?php
 require("assets/functions/functions.php");
 
+
+// Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
+// Will not working if $root_path will be outside of server document root
+$root_url = '';
+
+// Server hostname. Can set manually if wrong
+// $_SERVER['HTTP_HOST'].'/folder'
+$http_host = $_SERVER['HTTP_HOST'];
+$is_https = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1)
+    || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https';
+//  echo ($is_https ? 'https' : 'http') . '://' . $http_host . (!empty($root_url) ? '/' . $root_url : '');
+
 // add your web url here
-$web_url = "http://localhost/php/filemanager/";
+$web_url = ($is_https ? 'https' : 'http') . '://' . $http_host . $_SERVER['PHP_SELF'];
 // Root path for file manager
 // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
 $root_path = $_SERVER['DOCUMENT_ROOT'];
@@ -22,6 +62,7 @@ $files_ext = array(
 );
 
 
+
 // Don't Edit Below 
 $current_path = $root_path;
 $current_path_array = explode("/",$root_path);
@@ -29,10 +70,6 @@ $current_path_array = explode("/",$root_path);
 // clean and check $root_path
 $root_path = rtrim($root_path, '\\/');
 $root_path = str_replace('\\', '/', $root_path);
-if (!@is_dir($root_path)) {
-    echo "<h1>".lng('Root path')." \"{$root_path}\" ".lng('not found!')." </h1>";
-    exit;
-}
 
 
 
@@ -54,7 +91,7 @@ if(isset($_GET["d"])){
          if(unlink($file_path)){
              echo "File Deleted : ".$file_path;
             }else{
-                echo "File Delete Failed";
+                message("File Delete Failed",true);
             }
         }
         fmredirect($web_url."?p=".str_replace(array_slice(explode(" ",$_GET["d"]), -1)[0],"",$_GET["d"])."&frm=1");
@@ -70,21 +107,26 @@ if(isset($_GET["p"])){
     }
 }
 
+// copy folder/file
+if(isset($_POST["_path"]) && isset($_POST["_dest"])){
+  if(xcopy($_POST["_dest"],$_POST["_path"])){
+    message("Folder/file Copied!",false);
+  }else{
+    message("Folder/file Copied! Failed",true);
+  }
+}
+
 // create a new folder
 if(isset($_POST["folderName"]) && isset($_POST["folderPath"])){
     if(mkdir($_POST["folderPath"].$_POST["folderName"])){
-        echo "<div class='alert alert-primary' role='alert'>".
-        $_POST['folderName']." FOLDER CREATED
-       </div>";
+      message($_POST['folderName']." FOLDER CREATED",false);
     //    fmredirect($web_url."?p=".str_replace(array_slice(explode(" ",$_GET["folderPath"]), -1)[0],"",$_GET["folderPath"]));
     }
 }else if (isset($_POST["fileName"]) && isset($_POST["folderPath"]) && isset($_POST["ftext"])){
      $myfile = fopen($_POST["folderPath"].$_POST["fileName"], "w") or die("Unable to open file!");  
      fwrite($myfile, $_POST["ftext"]); 
      fclose($myfile);
-     echo "<div class='alert alert-primary' role='alert'>".
-        $_POST['fileName']." FILE CREATED
-       </div>";
+   message($_POST['fileName']." FILE CREATED",false);
 }
 
 //  Edit file
@@ -98,9 +140,11 @@ if(isset($_POST["editFileText"]) && isset($_POST["filePath"])){
 // rename folder/file
 if(isset($_POST["dir"])&&isset($_POST["rfolderName"])){
    if(rename($_POST["dir"],$_POST["rfolderPath"].$_POST["rfolderName"])){
-     echo "Folder/file Renamed";
+    message("Folder/file Renamed",false);
    }
 }
+
+
 
 function loadDir($input){
     global $root_path , $current_path , $current_path_array;
@@ -204,7 +248,7 @@ echo fm_enc(file_get_contents($_GET["edit"]));
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Create new folder</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -236,7 +280,7 @@ echo fm_enc(file_get_contents($_GET["edit"]));
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Create New File</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -282,11 +326,48 @@ echo fm_enc(file_get_contents($_GET["edit"]));
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Enter Folder Name : </span>
+                    <span class="input-group-text" id="inputGroup-sizing-default">Name : </span>
                 </div>
                 <input type="text" class="form-control" id="rfolderName" name="rfolderName"  aria-label="Default" aria-describedby="inputGroup-sizing-default">
                 <input type="text" class="form-control" name="rfolderPath" hidden value="<?php  echo ($current_path."/"); ?>" >
                 <input type="text" class="form-control" id="rPath" name="dir" hidden  >
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-primary"  value="SAVE">
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- COPY FILE/FOLDER Modal -->
+<div class="modal fade" id="copyFolder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Copy File</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="<?php echo $web_url."?p=".$_GET["p"]; ?>" method="post">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Current Dir : </span>
+                </div>
+                <input type="text" class="form-control" id="currentDir" name="_dest"  >
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Copy Dir : </span>
+                </div>
+                <input type="text" class="form-control" id="copyDir" name="_path"  aria-label="Default" aria-describedby="inputGroup-sizing-default">
+
             </div>
         </div>
         <div class="modal-footer">
@@ -365,8 +446,16 @@ echo fm_enc(file_get_contents($_GET["edit"]));
     folderNameInput[0].value = folderName;
     $("#rPath")[0].value = path;
   }
+  function foldercopy(_){
+    const folderName = _.getAttribute("folder");
+    const path = _.getAttribute("path");
+    const folderNameInput = $("#currentDir"); 
+    folderNameInput[0].value = path;
+    $("#copyDir")[0].value = path;
+  }
 
 </script>
 
 </body>
 </html>
+
