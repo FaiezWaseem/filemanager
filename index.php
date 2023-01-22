@@ -95,6 +95,12 @@ if(isset($_POST["editFileText"]) && isset($_POST["filePath"])){
      fclose($myfile);
 }
 
+// rename folder/file
+if(isset($_POST["dir"])&&isset($_POST["rfolderName"])){
+   if(rename($_POST["dir"],$_POST["rfolderPath"].$_POST["rfolderName"])){
+     echo "Folder/file Renamed";
+   }
+}
 
 function loadDir($input){
     global $root_path , $current_path , $current_path_array;
@@ -259,12 +265,43 @@ echo fm_enc(file_get_contents($_GET["edit"]));
     </div>
   </div>
 </div>
+ 
 
+<!-- RENAME FOLDER Modal -->
+<div class="modal fade" id="renameFolder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Name</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="<?php echo $web_url."?p=".$_GET["p"]; ?>" method="post">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Enter Folder Name : </span>
+                </div>
+                <input type="text" class="form-control" id="rfolderName" name="rfolderName"  aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                <input type="text" class="form-control" name="rfolderPath" hidden value="<?php  echo ($current_path."/"); ?>" >
+                <input type="text" class="form-control" id="rPath" name="dir" hidden  >
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-primary"  value="SAVE">
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+<?php if(isset($_GET["edit"])){ ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/ace.min.js" integrity="sha512-s57ywpCtz+4PU992Bg1rDtr6+1z38gO2mS92agz2nqQcuMQ6IvgLWoQ2SFpImvg1rbgqBKeSEq0d9bo9NtBY0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    // var editor = ace.edit("editor");
-    // editor.setTheme("ace/theme/twilight");
-    // editor.getSession().setMode("ace/mode/html");
     (async () => {
     let opt;
     ["xcode","gob","chrome","tomorrow_night","solarized_dark","kuroir","github","dracula","katzenmilch","merbivore","nord_dark"].forEach(function(e){
@@ -272,7 +309,7 @@ echo fm_enc(file_get_contents($_GET["edit"]));
     })
     await import('https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js').catch((error) => console.log('Loading failed' + error))
     document.body.appendChild(Object.assign(document.createElement("select"), {id: "themes", innerHTML: opt}))
-    // document.body.appendChild(Object.assign(document.createElement("div"), {id: "editor", style: "width:100%;height:100vh;border:1px black solid"}))
+    
     let editor = await ace.edit('editor')
     ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/')
     editor.setOptions({
@@ -296,6 +333,7 @@ echo fm_enc(file_get_contents($_GET["edit"]));
    }
 })()
 </script>
+<?php } ?>
 <script>
    
   try {
@@ -314,11 +352,18 @@ echo fm_enc(file_get_contents($_GET["edit"]));
 
   function DeleteClicked(){
     var markedCheckbox = document.querySelectorAll('.custom-control-input');
-  for (let name of markedCheckbox) {
-    if(name.checked == true){
-        console.log(name.parentNode.parentNode)
-    }
-}
+     for (let name of markedCheckbox) {
+        if(name.checked == true){
+          console.log(name.parentNode.parentNode)
+       }
+     }
+  }
+  function folderRename(_){
+    const folderName = _.getAttribute("folder");
+    const path = _.getAttribute("path");
+    const folderNameInput = $("#rfolderName"); 
+    folderNameInput[0].value = folderName;
+    $("#rPath")[0].value = path;
   }
 
 </script>

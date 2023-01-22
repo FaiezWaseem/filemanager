@@ -28,6 +28,9 @@ $root_path = $_SERVER['DOCUMENT_ROOT'];
 - [x]  File Download
 - [x]  Grid Layout
 - [ ]  List Layout
-- [ ]  Rename Folder/file
+- [x]  Rename Folder/file
 - [ ]  Copy Folder/file
 - [ ]  move Folder/file
+- [ ]  PDF Viewer
+- [ ]  PPT VIEWER
+- [ ]  AUTH / READONLY MODE

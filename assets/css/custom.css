@@ -269,7 +269,18 @@ body{margin-top:20px;}
         opacity: 1;
     }
 }
-@media (max-width: 468px) {
+
+@media (max-width: 900px) {
+    .file-manager-col-view .file-item{
+        width: calc(30% - 1rem);
+        margin: 4px;
+    }
+    .file-manager-container{
+        justify-content: center;
+    }
+
+}
+@media (max-width: 600px) {
     .file-manager-col-view .file-item{
         width: calc(50% - 1rem);
         margin: 4px;
