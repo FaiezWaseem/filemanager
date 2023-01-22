@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   <title>FileUpload</title>
+   <meta name="keywords" content="fcup.js,大文件上传,分段上传,h5上传,jquery上传插件,切片上传" />
+   <meta name="description" content="fcup.js是一款支持大文件切片上传jquery插件，使用简单方便，功能强大" />
+   <link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+   <!-- 上传进度条 -->
+   <div class="progress">
+      <div class="progress-bar" id="jd" role="progressbar" style="width: 0%;">0%</div>
+   </div>
+   <div style="margin: 250px auto;text-align: center;">
+      <!-- 上传按钮 -->
+      <button type="button" class="btn btn-success" id="upid">Upload</button>
+      <span id="message"></span>
+   </div>
+   <!--  jquery  -->
+   <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+
+   <!--  fcup.js  -->
+   <script src="./jquery.fcup.js"></script>
+   <script>
+      // The progress bar dynamically increases
+      function Progress(num) {
+         var jd = document.getElementById('jd');
+         jd.style.cssText = 'width:' + num + '%';
+         jd.innerHTML = num + '%';
+         document.getElementById("message").innerText  = num + '%';
+      }
+      function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
+var p = getUrlVars()["p"];
+
+      $.fcup({
+
+         upId: 'upid', //Upload the id of the dom
+
+         upShardSize: '5', //Slice size, (maximum per upload) in unit M, default 2M
+
+         upMaxSize: '4000', //Upload file size, unit M, no setting no limit
+
+         upUrl: './file.php?p='+p, //File upload interface
+
+
+         //The interface returns a result callback, which is judged according to the
+         // data returned by the result, and can return a string or json for judgment processing
+         upCallBack: function (res) {
+
+            // 状态
+            var status = res.status;
+            // 信息
+            var msg = res.message;
+            // url
+            var url = res.url + "?" + Math.random();
+
+            // Already done
+            if (status == 2) {
+               alert(msg);
+            }
+
+            // still uploading
+            if (status == 1) {
+               console.log(msg);
+            }
+
+            // The interface returns an error
+            if (status == 0) {
+               // Stop uploading trigger $.upStop function
+               $.upErrorMsg(msg);
+            }
+         
+            // 判断是否上传过了
+            if(status == 3){
+               Progress(100);
+               jQuery.upErrorMsg(msg);         
+            }
+         },
+
+         // 上传过程监听，可以根据当前执行的进度值来改变进度条
+         upEvent: function (num) {
+            // num的值是上传的进度，从1到100
+            Progress(num);
+         },
+
+         // 发生错误后的处理
+         upStop: function (errmsg) {
+            // 这里只是简单的alert一下结果，可以使用其它的弹窗提醒插件
+            alert(errmsg);
+            document.getElementById("message").innerText = "Uploading Failed .... "+errmsg;
+         },
+
+         // 开始上传前的处理和回调,比如进度条初始化等
+         upStart: function () {
+            Progress(0);
+            document.getElementById("message").innerText = "Uploading Started ....";
+         }
+
+      });
+   </script>
+</body>
+</html>
