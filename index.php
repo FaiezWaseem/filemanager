@@ -128,7 +128,7 @@ function loadDir($input){
     <style type="text/css" media="screen">
     #editor { 
         position: absolute;
-        top: 100px;
+        top: 20%;
         right: 0;
         bottom: 0;
         left: 0;
@@ -262,9 +262,28 @@ echo fm_enc(file_get_contents($_GET["edit"]));
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/ace.min.js" integrity="sha512-s57ywpCtz+4PU992Bg1rDtr6+1z38gO2mS92agz2nqQcuMQ6IvgLWoQ2SFpImvg1rbgqBKeSEq0d9bo9NtBY0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    var editor = ace.edit("editor");
-</script>
-<script>
+    // var editor = ace.edit("editor");
+    // editor.setTheme("ace/theme/twilight");
+    // editor.getSession().setMode("ace/mode/html");
+    (async () => {
+    let opt;
+    ["xcode","gob","chrome","tomorrow_night","solarized_dark","kuroir","github","dracula","katzenmilch","merbivore","nord_dark"].forEach(function(e){
+        opt += `<option value="${e}">${e}</option>`
+    })
+    await import('https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js').catch((error) => console.log('Loading failed' + error))
+    document.body.appendChild(Object.assign(document.createElement("select"), {id: "themes", innerHTML: opt}))
+    // document.body.appendChild(Object.assign(document.createElement("div"), {id: "editor", style: "width:100%;height:100vh;border:1px black solid"}))
+    let editor = await ace.edit('editor')
+    ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/')
+    editor.setOptions({
+        theme: 'ace/theme/tomorrow_night',
+        mode: 'ace/mode/javascript'
+    })
+    themes.addEventListener('change', function(e){
+      editor.setOptions({
+        theme: 'ace/theme/' + e.target.value
+      })
+    })
     let form = document.getElementById("fileEdit");
   form.onsubmit = (e) =>{
     e.preventDefault();
@@ -275,8 +294,12 @@ echo fm_enc(file_get_contents($_GET["edit"]));
     console.log(inputTextFeild[0].value)
      form.submit();
    }
-
-     document.getElementById("darkSwitch").checked = window.localStorage.getItem("theme") === "dark" ? true : false;
+})()
+</script>
+<script>
+   
+  try {
+    document.getElementById("darkSwitch").checked = window.localStorage.getItem("theme") === "dark" ? true : false;
   document.querySelector(".slider").onclick = () =>{
     if(document.getElementById("darkSwitch").checked){
       themeConfig.saveTheme("light")
@@ -285,6 +308,10 @@ echo fm_enc(file_get_contents($_GET["edit"]));
     }
     window.location.reload();
   }
+  } catch (error) {
+    
+  }
+
   function DeleteClicked(){
     var markedCheckbox = document.querySelectorAll('.custom-control-input');
   for (let name of markedCheckbox) {
