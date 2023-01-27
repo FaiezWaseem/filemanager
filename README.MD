@@ -1,4 +1,4 @@
-<img src="./assets/images/filemanger.PNG" width="300px" height="280px">
+<img src="./assets/images/filemanger.PNG" height="280px">
 
 ## SIMPLE PHP FILE MANAGER
  hey folks this is a very simple easy to use php based 
