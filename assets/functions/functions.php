@@ -166,4 +166,16 @@ function fm_icon($ext){
  
      return md5(implode('', $files));
  }
+
+ function passwordEnc(string $pass){
+  return password_hash($pass, PASSWORD_DEFAULT);
+}
+function verifyPassword($pass , $hash){
+  if (password_verify($pass, $hash)) {
+     return true;
+  } else {
+     return false;
+  }
+}
+
 ?>

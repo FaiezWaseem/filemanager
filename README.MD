@@ -1,3 +1,5 @@
+<img src="./assets/images/filemanger.PNG" width="300px" height="280px">
+
 ## SIMPLE PHP FILE MANAGER
  hey folks this is a very simple easy to use php based 
  file manager.
@@ -5,13 +7,13 @@
 ### Config 
  edit index.php 
  edit below lines with your web url and server path
-
+ 
 
 ```php
-$web_url = "http://localhost/php/filemanager/";
+$web_url = "https://example.com";  //  line 61
 // Root path for file manager 
 // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
-$root_path = $_SERVER['DOCUMENT_ROOT']; 
+$root_path = $_SERVER['DOCUMENT_ROOT']; // line 64 
 ```
 
 
@@ -34,4 +36,4 @@ $root_path = $_SERVER['DOCUMENT_ROOT'];
 - [ ]  move Folder/file
 - [ ]  PDF Viewer
 - [ ]  PPT VIEWER
-- [ ]  AUTH / READONLY MODE
+- [x]  AUTH / READONLY MODE (only auth mode added)

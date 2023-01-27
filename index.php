@@ -31,6 +31,22 @@ if (file_exists($file)) {
 require("assets/functions/functions.php");
 
 
+
+// 8 hours in seconds
+$inactive = 28800; 
+ini_set('session.gc_maxlifetime', $inactive); // set the session max lifetime to 8 hours
+
+session_start();
+
+if (isset($_SESSION['exptime']) && (time() - $_SESSION['exptime'] > $inactive)) {
+    // last request was more than 8 hours ago
+    session_unset();     // unset $_SESSION variable for this page
+    session_destroy();   // destroy session data
+}
+$_SESSION['exptime'] = time(); // Update session
+
+
+
 // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
 // Will not working if $root_path will be outside of server document root
 $root_url = '';
@@ -40,7 +56,6 @@ $root_url = '';
 $http_host = $_SERVER['HTTP_HOST'];
 $is_https = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1)
     || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https';
-//  echo ($is_https ? 'https' : 'http') . '://' . $http_host . (!empty($root_url) ? '/' . $root_url : '');
 
 // add your web url here
 $web_url = ($is_https ? 'https' : 'http') . '://' . $http_host . $_SERVER['PHP_SELF'];
@@ -49,6 +64,32 @@ $web_url = ($is_https ? 'https' : 'http') . '://' . $http_host . $_SERVER['PHP_S
 $root_path = $_SERVER['DOCUMENT_ROOT'];
 // $root_path = "C:";
 // Extension supported
+
+
+
+$is_logged_in = false;
+$auth = true;
+$auth_users = array(
+  "user" => 'admin',
+  "password" => '$2y$10$Dslt6unl7BrTGG0yNg37zOLNHQ/n7cpSAxGpklQHsBa/zvlb8OrvO', // admin
+);
+
+
+if(isset($_POST["username"])&& isset($_POST["password"]) && isset($_GET["login"])){
+   if(verifyPassword($_POST["password"],$auth_users["password"])){
+    $_SESSION["is_logged_in"] = true;
+    
+  }else{
+     echo message("Invalid", false);
+
+   }
+}
+
+if(isset($_SESSION["is_logged_in"]) && $_SESSION["is_logged_in"]){
+  $is_logged_in = true;
+}
+
+
 $images_ext = array('ico', 'gif', 'jpg', 'jpeg', 'jpc', 'jp2', 'jpx', 'xbm', 'wbmp', 'png', 'bmp', 'tif', 'tiff', 'psd', 'svg', 'webp', 'avif','PNG','JPEG','JPG');
 $video_ext = array('avi', 'webm', 'wmv', 'mp4', 'm4v', 'ogm', 'ogv', 'mov', 'mkv');
 $audio_ext = array('wav', 'mp3', 'ogg', 'm4a');
@@ -169,7 +210,24 @@ function loadDir($input){
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simple FileManager</title>
+    <!-- Primary Meta Tags -->
+<title>Simple Php File Manager</title>
+<meta name="title" content="Simple Php File Manager">
+<meta name="description" content="Hey Folks this is a simple php based File Manager . Which supports file upload , delete , copy , download etc features . Simply put it in the public directory of your server and Enjoy">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://faiezwaseem.github.io/">
+<meta property="og:title" content="Simple Php File Manager">
+<meta property="og:description" content="Hey Folks this is a simple php based File Manager . Which supports file upload , delete , copy , download etc features . Simply put it in the public directory of your server and Enjoy">
+<meta property="og:image" content="./assets/images/filemanger.PNG">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://faiezwaseem.github.io/">
+<meta property="twitter:title" content="Simple Php File Manager">
+<meta property="twitter:description" content="Hey Folks this is a simple php based File Manager . Which supports file upload , delete , copy , download etc features . Simply put it in the public directory of your server and Enjoy">
+<meta property="twitter:image" content="./assets/images/filemanger.PNG">
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.5.6/css/ionicons.min.css" integrity="sha512-0/rEDduZGrqo4riUlwqyuHDQzp2D1ZCgH/gFIfjMIL5az8so6ZiXyhf1Rg8i6xsjv+z/Ubc4tt1thLigEcu6Ug==" crossorigin="anonymous" referrerpolicy="no-referrer"> 
     <link rel="stylesheet" href="./assets/css/custom.css">  
@@ -198,6 +256,10 @@ function loadDir($input){
     // themeConfig.saveTheme("dark")
 </script>
 <!-- END INSERTION -->
+
+<?php  if($auth){ 
+    if($is_logged_in){ ?>
+
 <?php
 if(!isset($_GET["edit"])){ ?>
 <div class="container flex-grow-1 light-style container-p-y">
@@ -466,6 +528,37 @@ echo fm_enc(file_get_contents($_GET["edit"]));
 
 </script>
 
+<?php }else{ ?>
+
+  <div class="container" style="justify-content:center;display:flex;height: 100vh;align-items:center;">
+
+  <form style="width: 300px" action="<?php echo $web_url."?login=" ?>" method="post">
+  <!-- Email input -->
+  <div class="form-outline mb-4">
+    <label class="form-label" for="form2Example1">Username</label>
+    <input type="text" name="username" class="form-control" />
+  </div>
+
+  <!-- Password input -->
+  <div class="form-outline mb-4">
+    <label class="form-label" for="form2Example2">Password</label>
+    <input type="password" name="password" class="form-control" />
+  </div>
+
+
+  <!-- Submit button -->
+  <input type="submit" class="btn btn-primary btn-block mb-4" value="Sign in" name="submit_login" />
+
+</form>
+  </div>
+  
+  
+<?php
+}
+
+}
+
+?>
 </body>
 </html>
 

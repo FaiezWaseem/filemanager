@@ -5,7 +5,10 @@
          if (is_dir($current_path)){
            if ($dh = opendir($current_path)){
             while (($file = readdir($dh)) !== false){
-                if(is_dir($current_path."/".$file)){ 
+                if($file == ".." || $file == "."){
+                    // skipping .. . folder
+                }
+                else if(is_dir($current_path."/".$file)){ 
                     ?>
                             <div class="file-item">
             <div class="file-item-select-bg bg-primary"></div>
@@ -14,7 +17,7 @@
                 <span class="custom-control-label"></span>
             </label>
             <img src="./assets/images/Folder-icon.png" alt="folder" class="file-item-icon far fa-folder text-secondary">
-            <!-- <div class="file-item-icon far fa-folder text-secondary"></div> -->
+            
             <a href="?p=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file ?>" class="file-item-name">
                 <?php echo $file ?>
             </a>
@@ -44,7 +47,7 @@
                 <?php echo $file ?>
             </a>
             <div class="file-item-changed">02/20/2018</div>
-            <div class="file-item-actions btn-group">
+            <div class="file-item-actions btn-group dropup">
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
