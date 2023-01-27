@@ -1,3 +1,4 @@
+
 <?php
           
           // Open a directory, and read its contents
@@ -18,8 +19,8 @@
                 <?php echo $file ?>
             </a>
             <div class="file-item-changed">02/13/2018</div>
-            <div class="file-item-actions btn-group">
-                <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
+            <div class="file-item-actions btn-group dropup">
+                <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
                     <a class="dropdown-item" href="javascript:void(0)">Move</a>
@@ -38,7 +39,7 @@
                 <input type="checkbox" class="custom-control-input" />
                 <span class="custom-control-label"></span>
             </label>
-            <div class="file-item-img" style="background-image: url(<?php echo $web_url; ?>?file=<?php  echo ($current_path."/".$file); ?>);background-size:cover;"></div>
+            <div class="file-item-img" style="background-image: url(<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>);background-size:cover;"></div>
             <a href="javascript:void(0)" class="file-item-name">
                 <?php echo $file ?>
             </a>
@@ -62,14 +63,14 @@
                 <input type="checkbox" class="custom-control-input" />
                 <span class="custom-control-label"></span>
             </label>
-            <video style="width : 100%" src="<?php echo $web_url; ?>?file=<?php  echo ($current_path."/".$file); ?>"></video>
+            <video style="width : 100%" src="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>"></video>
             <!-- <div class="file-item-icon far fa-file-video text-secondary">
             </div> -->
             <a href="javascript:void(0)" class="file-item-name">
                 <?php echo $file; ?>
             </a>
             <div class="file-item-changed">03/01/2018</div>
-            <div class="file-item-actions btn-group">
+            <div class="file-item-actions btn-group dropup">
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
@@ -91,7 +92,7 @@
             <?php echo $file;?>
             </a>
             <div class="file-item-changed">02/28/2018</div>
-            <div class="file-item-actions btn-group">
+            <div class="file-item-actions btn-group dropup">
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
@@ -115,7 +116,7 @@
                 <?php echo $file; ?>
             </a>
             <div class="file-item-changed">02/16/2018</div>
-            <div class="file-item-actions btn-group">
+            <div class="file-item-actions btn-group dropup">
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
@@ -139,7 +140,7 @@
                 <?php echo $file ?>
             </a>
             <div class="file-item-changed">02/26/2018</div>
-            <div class="file-item-actions btn-group">
+            <div class="file-item-actions btn-group dropup">
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>
@@ -149,13 +150,7 @@
                 </div>
             </div>
         </div>
-                <?php    }elseif ($file == "..") { ?>
-                    <div class="file-item">
-            <div class="file-item-icon file-item-level-up fas fa-level-up-alt text-secondary"></div>
-            <a href="<?php echo $file; ?>" class="file-item-name">
-                <?php echo $file; ?>
-            </a>
-        </div>
+  
                     
                 
               <?php  }else{ ?>
@@ -170,7 +165,7 @@
                 <?php echo $file;?>
             </a>
             <div class="file-item-changed">02/24/2018</div>
-            <div class="file-item-actions btn-group">
+            <div class="file-item-actions btn-group dropup">
                 <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
                 <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#renameFolder" path="<?php echo $current_path."/".$file; ?>"  onclick="folderRename(this)" folder="<?php echo $file;?>">Rename</a>

@@ -1,3 +1,4 @@
+
 <?php
 // display image/video file
 if(isset($_GET['file'])){
@@ -46,7 +47,7 @@ $web_url = ($is_https ? 'https' : 'http') . '://' . $http_host . $_SERVER['PHP_S
 // Root path for file manager
 // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
 $root_path = $_SERVER['DOCUMENT_ROOT'];
-// $root_path = "E:";
+// $root_path = "C:";
 // Extension supported
 $images_ext = array('ico', 'gif', 'jpg', 'jpeg', 'jpc', 'jp2', 'jpx', 'xbm', 'wbmp', 'png', 'bmp', 'tif', 'tiff', 'psd', 'svg', 'webp', 'avif','PNG','JPEG','JPG');
 $video_ext = array('avi', 'webm', 'wmv', 'mp4', 'm4v', 'ogm', 'ogv', 'mov', 'mkv');
@@ -367,7 +368,6 @@ echo fm_enc(file_get_contents($_GET["edit"]));
                     <span class="input-group-text" id="inputGroup-sizing-default">Copy Dir : </span>
                 </div>
                 <input type="text" class="form-control" id="copyDir" name="_path"  aria-label="Default" aria-describedby="inputGroup-sizing-default">
-
             </div>
         </div>
         <div class="modal-footer">
@@ -385,11 +385,16 @@ echo fm_enc(file_get_contents($_GET["edit"]));
 <script>
     (async () => {
     let opt;
-    ["xcode","gob","chrome","tomorrow_night","solarized_dark","kuroir","github","dracula","katzenmilch","merbivore","nord_dark"].forEach(function(e){
+    let lang;
+    ["xcode","gob","chrome","tomorrow_night","solarized_dark","kuroir","github","dracula","katzenmilch","merbivore","nord_dark","sqlserver","textmate"].forEach(function(e){
         opt += `<option value="${e}">${e}</option>`
-    })
+    });
+    ["abap","abc","actionscript","ada","alda","apache_conf","apex","aql","asciidoc","asl","assembly_x86","autohotkey","batchfile","bibtex","c_cpp","c9search","cirru","clojure","cobol","coffee","coldfusion","crystal","csharp","csound_document","csound_orchestra","csound_score","css","curly","d","dart","diff","dockerfile","dot","drools","edifact","eiffel","ejs","elixir","elm","erlang","forth","fortran","fsharp","fsl","ftl","gcode","gherkin","gitignore","glsl","gobstones","golang","graphqlschema","groovy","haml","handlebars","haskell","haskell_cabal","haxe","hjson","html","html_elixir","html_ruby","ini","io","ion","jack","jade","java","javascript","jexl","json","json5","jsoniq","jsp","jssm","jsx","julia","kotlin","latex","latte","less","liquid","lisp","livescript","log","logiql","logtalk","lsl","lua","luapage","lucene","makefile","markdown","mask","matlab","maze","mediawiki","mel","mips","mixal","mushcode","mysql","nginx","nim","nix","nsis","nunjucks","objectivec","ocaml","partiql","pascal","perl","pgsql","php_laravel_blade","php","pig","powershell","praat","prisma","prolog","properties","protobuf","puppet","python","qml","r","raku","razor","rdoc","red","rhtml","robot","rst","ruby","rust","sac","sass","scad","scala","scheme","scrypt","scss","sh","sjs","slim","smarty","smithy","snippets","soy_template","space","sparql","sql","sqlserver","stylus","svg","swift","tcl","terraform","tex","text","textile","toml","tsx","turtle","twig","typescript","vala","vbscript","velocity","verilog","vhdl","visualforce","wollok","xml","xquery","yaml","zeek","django"].forEach(function(e){
+        lang += `<option value="${e}">${e}</option>`
+    });
     await import('https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js').catch((error) => console.log('Loading failed' + error))
     document.body.appendChild(Object.assign(document.createElement("select"), {id: "themes", innerHTML: opt}))
+    document.body.appendChild(Object.assign(document.createElement("select"), {id: "modes", innerHTML: lang}))
     
     let editor = await ace.edit('editor')
     ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/')
@@ -400,6 +405,11 @@ echo fm_enc(file_get_contents($_GET["edit"]));
     themes.addEventListener('change', function(e){
       editor.setOptions({
         theme: 'ace/theme/' + e.target.value
+      })
+    })
+    modes.addEventListener('change', function(e){
+      editor.setOptions({
+        mode: 'ace/mode/' + e.target.value
       })
     })
     let form = document.getElementById("fileEdit");

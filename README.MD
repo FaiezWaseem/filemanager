@@ -30,7 +30,7 @@ $root_path = $_SERVER['DOCUMENT_ROOT'];
 - [ ]  List Layout
 - [x]  Rename Folder/file
 - [x]  Copy file
-- [ ]  Copy Folder
+- [x]  Copy Folder
 - [ ]  move Folder/file
 - [ ]  PDF Viewer
 - [ ]  PPT VIEWER
