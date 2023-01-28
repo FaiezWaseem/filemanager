@@ -6,19 +6,17 @@
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
    <title>File Manager Upload</title>
-   <meta name="keywords" content="fcup.js,大文件上传,分段上传,h5上传,jquery上传插件,切片上传" />
-   <meta name="description" content="fcup.js是一款支持大文件切片上传jquery插件，使用简单方便，功能强大" />
+   <meta name="keywords" content="upload,filemanager,cloud" />
+   <meta name="description" content="filemanager" />
    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
 
 <body>
-   <!-- 上传进度条 -->
    <div class="progress">
       <div class="progress-bar" id="jd" role="progressbar" style="width: 0%;">0%</div>
    </div>
    <div style="margin: 250px auto;text-align: center;">
-      <!-- 上传按钮 -->
       <button type="button" class="btn btn-success" id="upid">Upload</button>
       <span id="message"></span>
    </div>
@@ -56,7 +54,7 @@ var p = getUrlVars()["p"];
 
          upShardSize: '5', //Slice size, (maximum per upload) in unit M, default 2M
 
-         upMaxSize: '4000', //Upload file size, unit M, no setting no limit
+         upMaxSize: '4400', //Upload file size, unit M, no setting no limit
 
          upUrl: './file.php?p='+p, //File upload interface
 

@@ -6,14 +6,24 @@
 
 ### Config 
  edit index.php 
- edit below lines with your web url and server path
- 
+ To add absolute url change the path at line 61 variable $web_url
+ To change root path change at line 64 $root_path
+ To Go into read mode only edit line 70 to true
+ To enable auth edit line 70 to true
+ by default 
+ username = admin
+ password = admin
+ To change username & password goto line 72
+
 
 ```php
 $web_url = "https://example.com";  //  line 61
 // Root path for file manager 
 // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
 $root_path = $_SERVER['DOCUMENT_ROOT']; // line 64 
+
+$read_only = false; // line 70
+$auth = false; // line 71
 ```
 
 

@@ -64,11 +64,11 @@ $web_url = ($is_https ? 'https' : 'http') . '://' . $http_host . $_SERVER['PHP_S
 $root_path = $_SERVER['DOCUMENT_ROOT'];
 // $root_path = "C:";
 // Extension supported
+$is_logged_in = false;  // dont edit this 
 
 
-$read_only = true;
-$is_logged_in = false;
-$auth = true;
+$read_only = false;
+$auth = false;
 $auth_users = array(
   "user" => 'admin',
   "password" => '$2y$10$Dslt6unl7BrTGG0yNg37zOLNHQ/n7cpSAxGpklQHsBa/zvlb8OrvO', // admin
@@ -170,8 +170,7 @@ if(isset($_POST["folderName"]) && isset($_POST["folderPath"])){
   if(!$read_only){
     if(mkdir($_POST["folderPath"].$_POST["folderName"])){
       message($_POST['folderName']." FOLDER CREATED",false);
-      //    fmredirect($web_url."?p=".str_replace(array_slice(explode(" ",$_GET["folderPath"]), -1)[0],"",$_GET["folderPath"]));
-    }
+  }
   }else{
     message("currently in read only mode",true);
   }
