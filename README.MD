@@ -36,4 +36,4 @@ $root_path = $_SERVER['DOCUMENT_ROOT']; // line 64
 - [ ]  move Folder/file
 - [ ]  PDF Viewer
 - [ ]  PPT VIEWER
-- [x]  AUTH / READONLY MODE (only auth mode added)
+- [x]  AUTH / READONLY MODE 

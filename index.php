@@ -66,7 +66,7 @@ $root_path = $_SERVER['DOCUMENT_ROOT'];
 // Extension supported
 
 
-
+$read_only = true;
 $is_logged_in = false;
 $auth = true;
 $auth_users = array(
@@ -78,10 +78,8 @@ $auth_users = array(
 if(isset($_POST["username"])&& isset($_POST["password"]) && isset($_GET["login"])){
    if(verifyPassword($_POST["password"],$auth_users["password"])){
     $_SESSION["is_logged_in"] = true;
-    
   }else{
-     echo message("Invalid", false);
-
+     message("Invalid", false);
    }
 }
 
@@ -118,7 +116,8 @@ $root_path = str_replace('\\', '/', $root_path);
 // Remove A file or Folder
 // d parameter contains the path of file/dir
 if(isset($_GET["d"])){
-
+  
+  if(!$read_only){
      $file_path = str_replace(" ","/",$_GET["d"]);
      $file_path = str_replace(array_slice(explode("/",$root_path), -1)[0],"",$file_path);
      $file_path = $root_path . $file_path;
@@ -137,8 +136,10 @@ if(isset($_GET["d"])){
             }
         }
         fmredirect($web_url."?p=".str_replace(array_slice(explode(" ",$_GET["d"]), -1)[0],"",$_GET["d"])."&frm=1");
+      }else{
+        message("currently in read only mode",true);
+      }
 }
-
 
 
 
@@ -150,48 +151,69 @@ if(isset($_GET["p"])){
 }
 
 // copy folder/file
-if(isset($_POST["_path"]) && isset($_POST["_dest"])){
-  if(xcopy($_POST["_dest"],$_POST["_path"])){
-    message("Folder/file Copied!",false);
+if(isset($_POST["_path"]) && isset($_POST["_dest"]) ){
+  if(!$read_only){
+    if(xcopy($_POST["_dest"],$_POST["_path"])){
+      message("Folder/file Copied!",false);
+    }else{
+      message("Folder/file Copied! Failed",true);
+    }
   }else{
-    message("Folder/file Copied! Failed",true);
+    message("currently in read only mode",true);
   }
 }
 
+
+
 // create a new folder
 if(isset($_POST["folderName"]) && isset($_POST["folderPath"])){
+  if(!$read_only){
     if(mkdir($_POST["folderPath"].$_POST["folderName"])){
       message($_POST['folderName']." FOLDER CREATED",false);
-    //    fmredirect($web_url."?p=".str_replace(array_slice(explode(" ",$_GET["folderPath"]), -1)[0],"",$_GET["folderPath"]));
+      //    fmredirect($web_url."?p=".str_replace(array_slice(explode(" ",$_GET["folderPath"]), -1)[0],"",$_GET["folderPath"]));
     }
+  }else{
+    message("currently in read only mode",true);
+  }
 }else if (isset($_POST["fileName"]) && isset($_POST["folderPath"]) && isset($_POST["ftext"])){
-     $myfile = fopen($_POST["folderPath"].$_POST["fileName"], "w") or die("Unable to open file!");  
-     fwrite($myfile, $_POST["ftext"]); 
-     fclose($myfile);
-   message($_POST['fileName']." FILE CREATED",false);
-}
+  if(!$read_only){
+    $myfile = fopen($_POST["folderPath"].$_POST["fileName"], "w") or die("Unable to open file!");  
+    fwrite($myfile, $_POST["ftext"]); 
+    fclose($myfile);
+    message($_POST['fileName']." FILE CREATED",false);
+  }else{
+    message("currently in read only mode",true);
+  }
+  }
 
 //  Edit file
 if(isset($_POST["editFileText"]) && isset($_POST["filePath"])){
+  if(!$read_only){
   $myfile = fopen($_POST["filePath"], "w") or die("Unable to open file!");  
    $text = json_decode($_POST["editFileText"]);
      fwrite($myfile, $text->text); 
      fclose($myfile);
+    }else{
+      message("currently in read only mode",true);
+    }  
 }
 
 // rename folder/file
 if(isset($_POST["dir"])&&isset($_POST["rfolderName"])){
-   if(rename($_POST["dir"],$_POST["rfolderPath"].$_POST["rfolderName"])){
+  if(!$read_only){
+  if(rename($_POST["dir"],$_POST["rfolderPath"].$_POST["rfolderName"])){
     message("Folder/file Renamed",false);
    }
+  }else{
+    message("currently in read only mode",true);
+  }  
 }
-
 
 
 function loadDir($input){
     global $root_path , $current_path , $current_path_array;
     $c_dir = array_slice(explode("/",$root_path), -1)[0]; // extract current Directory name 
-    $temp =  (explode(" ",$input));
+    $temp =  (explode(" ",str_replace("..","",$input))); 
     unset($temp[0]);
     $current_path = $root_path;
     foreach ($temp as $key => $value) {
