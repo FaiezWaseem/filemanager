@@ -278,8 +278,7 @@ function loadDir($input){
 </script>
 <!-- END INSERTION -->
 
-<?php  if($auth){ 
-    if($is_logged_in){ ?>
+<?php  if(($auth && $is_logged_in) || !$auth){ ?>
 
 <?php
 if(!isset($_GET["edit"])){ ?>
@@ -549,7 +548,7 @@ echo fm_enc(file_get_contents($_GET["edit"]));
 
 </script>
 
-<?php }else{ ?>
+<?php }  if($auth && !$is_logged_in){?>
 
   <div class="container" style="justify-content:center;display:flex;height: 100vh;align-items:center;">
 
@@ -577,7 +576,6 @@ echo fm_enc(file_get_contents($_GET["edit"]));
 <?php
 }
 
-}
 
 ?>
 </body>
