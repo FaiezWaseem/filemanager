@@ -14,6 +14,7 @@
 var fcup_upload = {
     fcup: function (config) {
         jQuery.extend(config);
+        jQuery.count = 0;
         if (jQuery.upId && jQuery.upUrl) {
             jQuery.domHtml = jQuery('#' + jQuery.upId).html();
             jQuery.fcup_addFileInput();
@@ -67,9 +68,9 @@ var fcup_upload = {
         var H = jQuery('#' + jQuery.upId).innerHeight();
         var html = jQuery.domHtml;
         if (C) {
-            html += '<input type="file" id="' + jQuery.upInputId + '" class="' + C + '" onchange="jQuery.fcup_upload()" style="position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;">';
+            html += '<input type="file" id="' + jQuery.upInputId + '" class="' + C + '" onchange="jQuery.fcup_upload()" style="position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;" multiple>';
         } else {
-            html += '<input type="file" id="' + jQuery.upInputId + '" onchange="jQuery.fcup_upload()" style="position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;">';
+            html += '<input type="file" id="' + jQuery.upInputId + '" onchange="jQuery.fcup_upload()" style="position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;" multiple>';
         }
         jQuery('#' + jQuery.upId).html(html);
     },
@@ -84,8 +85,16 @@ var fcup_upload = {
     fcup_upload: function () {
         jQuery.upError = '';
         jQuery.fileMD5 = '';
-        jQuery.tempFile = jQuery('#' + jQuery.upInputId)[0].files[0];
+        let allFiles  = jQuery('#' + jQuery.upInputId)[0].files;
+        jQuery.allFiles = allFiles;
+        if(jQuery.count == 0){
+            jQuery.listfiles(allFiles)
+        }
+        jQuery.tempFile = allFiles[jQuery.count];
         var file = jQuery.tempFile;
+        if(allFiles.length-1 >= jQuery.count){
+            jQuery.count += 1;
+        }
         if (!file) {
             return false;
         }
@@ -170,17 +179,28 @@ var fcup_upload = {
                         ++succeed;
                         var cent = jQuery.fcup_getPercent(succeed, shardCount);
                         if (typeof jQuery.upEvent == 'function') {
-                            jQuery.upEvent(cent);
+                            jQuery.upEvent(cent,jQuery.tempFile.size);
                         }
                         if (cent == 100) {
                             setTimeout(function () {
                                 if (typeof jQuery.upCallBack == 'function') {
-                                    jQuery.upCallBack(data);
+                                    jQuery.upCallBack(data,jQuery.tempFile.size);
+                                    if(data.status == 2){
+                                        if(jQuery.allFiles.length-1 >= jQuery.count){
+                                          jQuery.fcup_upload()
+                                        }
+                                       
+                                    }
                                 }
                             }, 500);
                         } else {
                             if (typeof jQuery.upCallBack == 'function') {
                                 jQuery.upCallBack(data);
+                                if(data.status == 2){
+                                    if(jQuery.allFiles.length-1 > jQuery.count){
+                                        jQuery.fcup_upload()
+                                    }
+                                }
                             }
                         }
                     }

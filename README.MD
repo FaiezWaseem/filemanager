@@ -5,15 +5,15 @@
  file manager.
 
 ### Config 
- edit index.php 
- To add absolute url change the path at line 61 variable $web_url
- To change root path change at line 64 $root_path
- To Go into read mode only edit line 70 to true
- To enable auth edit line 70 to true
- by default 
- username = admin
- password = admin
- To change username & password goto line 72
+ - edit index.php 
+ - To add absolute url change the path at line 61 variable $web_url
+ - To change root path change at line 64 $root_path
+ - To Go into read mode only edit line 70 to true
+ - To enable auth edit line 70 to true
+ - by default 
+ - username = admin
+ - password = admin
+ - To change username & password goto line 72
 
 
 ```php
@@ -29,7 +29,8 @@ $auth = false; // line 71
 
 
 ### TODO
-- [x]  Upload file (upto 4gb)
+- [x]  Upload file (upto 9gb)
+- [x]  Multiple File Uploads
 - [x]  Edit Text Files
 - [x]  create new Folders
 - [x]  create new Files
@@ -39,11 +40,12 @@ $auth = false; // line 71
 - [x]  File/Folders Icon
 - [x]  File Download
 - [x]  Grid Layout
-- [ ]  List Layout
 - [x]  Rename Folder/file
 - [x]  Copy file
 - [x]  Copy Folder
+- [x]  AUTH / READONLY MODE 
+- [ ]  List Layout
+- [ ]  Unzip
 - [ ]  move Folder/file
 - [ ]  PDF Viewer
 - [ ]  PPT VIEWER
-- [x]  AUTH / READONLY MODE 

@@ -274,7 +274,6 @@ function loadDir($input){
 	const BootstrapDarkmode = window['bootstrap-darkmode'];
 	const themeConfig = new BootstrapDarkmode.ThemeConfig();
 	themeConfig.initTheme();
-    // themeConfig.saveTheme("dark")
 </script>
 <!-- END INSERTION -->
 

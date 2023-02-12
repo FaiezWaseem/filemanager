@@ -9,16 +9,41 @@
    <meta name="keywords" content="upload,filemanager,cloud" />
    <meta name="description" content="filemanager" />
    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="../assets/boostrapDark/darktheme.css"/>
+       <!-- BEGIN INSERTION -->
+<script src="../assets/bundles/bootstrap-darkmode.umd.js"></script>
 
 </head>
 
 <body>
+   <script>
+      const BootstrapDarkmode = window['bootstrap-darkmode'];
+      const themeConfig = new BootstrapDarkmode.ThemeConfig();
+      themeConfig.initTheme();
+       // themeConfig.saveTheme("dark")
+   </script>
+   <!-- END INSERTION -->   
+   <div class="container">
    <div class="progress">
       <div class="progress-bar" id="jd" role="progressbar" style="width: 0%;">0%</div>
    </div>
-   <div style="margin: 250px auto;text-align: center;">
+   <div style="text-align: center;">
       <button type="button" class="btn btn-success" id="upid">Upload</button>
       <span id="message"></span>
+   </div>
+   <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Size</th>
+          <th scope="col">Progress</th>
+        </tr>
+      </thead>
+      <tbody id="filesbdy">
+   
+      </tbody>
+    </table>
    </div>
    <!--  jquery  -->
    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
@@ -26,42 +51,41 @@
    <!--  fcup.js  -->
    <script src="./jquery.fcup.js"></script>
    <script>
+       console.log($.fcup)
       // The progress bar dynamically increases
       function Progress(num) {
          var jd = document.getElementById('jd');
          jd.style.cssText = 'width:' + num + '%';
          jd.innerHTML = num + '%';
-         document.getElementById("message").innerText  = num + '%';
+         document.getElementById("message").innerText = num + '%';
       }
-      function getUrlVars()
-{
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
+      function getUrlVars() {
+         var vars = [], hash;
+         var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+         for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+         }
+         return vars;
+      }
 
-var p = getUrlVars()["p"];
+      var p = getUrlVars()["p"];
 
       $.fcup({
 
          upId: 'upid', //Upload the id of the dom
 
-         upShardSize: '5', //Slice size, (maximum per upload) in unit M, default 2M
+         upShardSize: '3', //Slice size, (maximum per upload) in unit M, default 3M
 
-         upMaxSize: '4400', //Upload file size, unit M, no setting no limit
+         upMaxSize: '9216', //Upload file size, unit M, no setting no limit supported 9GB
 
-         upUrl: './file.php?p='+p, //File upload interface
+         upUrl: './file.php?p=' + p, //File upload interface
 
 
          //The interface returns a result callback, which is judged according to the
          // data returned by the result, and can return a string or json for judgment processing
-         upCallBack: function (res) {
+         upCallBack: function (res,id) {
 
             // 状态
             var status = res.status;
@@ -73,6 +97,7 @@ var p = getUrlVars()["p"];
             // Already done
             if (status == 2) {
                alert(msg);
+               document.getElementById("f"+id).innerText = "Done";
             }
 
             // still uploading
@@ -85,34 +110,54 @@ var p = getUrlVars()["p"];
                // Stop uploading trigger $.upStop function
                $.upErrorMsg(msg);
             }
-         
+
             // 判断是否上传过了
-            if(status == 3){
+            if (status == 3) {
                Progress(100);
-               jQuery.upErrorMsg(msg);         
+               jQuery.upErrorMsg(msg);
             }
          },
 
          // 上传过程监听，可以根据当前执行的进度值来改变进度条
-         upEvent: function (num) {
+         upEvent: function (num,id) {
             // num的值是上传的进度，从1到100
             Progress(num);
+            document.getElementById("f"+id).innerText = num+"%";
          },
 
          // 发生错误后的处理
          upStop: function (errmsg) {
             // 这里只是简单的alert一下结果，可以使用其它的弹窗提醒插件
             alert(errmsg);
-            document.getElementById("message").innerText = "Uploading Failed .... "+errmsg;
+            document.getElementById("message").innerText = "Uploading Failed .... " + errmsg;
          },
 
          // 开始上传前的处理和回调,比如进度条初始化等
          upStart: function () {
             Progress(0);
             document.getElementById("message").innerText = "Uploading Started ....";
+         },
+         listfiles : function(files){
+          for (let i = 0; i < files.length; i++) {
+            const element = files[i];
+            document.getElementById("filesbdy").innerHTML +=  `
+            <tr>
+          <th scope="row">${i+1}</th>
+          <td>${element.name}</td>
+          <td>${humanFileSize(element.size)}</td>
+          <td id="f${element.size}">0%</td>
+        </tr>
+            `
+            
+          }
          }
 
       });
+      function humanFileSize(size) {
+    var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+}
    </script>
 </body>
+
 </html>
