@@ -44,8 +44,14 @@ $auth = false; // line 71
 - [x]  Copy file
 - [x]  Copy Folder
 - [x]  AUTH / READONLY MODE 
+- [x]  Play Videos 
 - [ ]  List Layout
 - [ ]  Unzip
 - [ ]  move Folder/file
 - [ ]  PDF Viewer
 - [ ]  PPT VIEWER
+
+
+## ISSUES
+
+- file with space remove error (fixed)

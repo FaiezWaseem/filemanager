@@ -21,7 +21,7 @@ $md5   = isset($_POST['file_md5']) ? $_POST['file_md5'] : 0; //文件的md5值
 
 $size  = isset($_POST['file_size']) ?  $_POST['file_size'] : null; //文件大小
 
-$path  = isset($_GET['p']) ?  $_GET['p'] : null; //文件大小
+$path  = isset($_GET['p']) ?  str_replace('~', ' ',$_GET['p']) : null; //文件大小
 
 //echo 'Total number of files:'.$total.'Current number of files:'.$index;
 

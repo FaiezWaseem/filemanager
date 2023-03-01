@@ -2,13 +2,15 @@
 <?php
           
           // Open a directory, and read its contents
-         if (is_dir($current_path)){
-           if ($dh = opendir($current_path)){
+
+         if (is_dir(str_replace('~', ' ',$current_path))){
+           if ($dh = opendir(str_replace('~', ' ',$current_path))){
             while (($file = readdir($dh)) !== false){
+                $file = str_replace(' ', '~', $file);
                 if($file == ".." || $file == "."){
                     // skipping .. . folder
                 }
-                else if(is_dir($current_path."/".$file)){ 
+                else if(is_dir(str_replace('~', ' ',$current_path)."/".str_replace('~', ' ', $file))){ 
                     ?>
                             <div class="file-item">
             <div class="file-item-select-bg bg-primary"></div>
@@ -16,7 +18,9 @@
                 <input type="checkbox" class="custom-control-input" />
                 <span class="custom-control-label"></span>
             </label>
-            <img src="./assets/images/Folder-icon.png" alt="folder" class="file-item-icon far fa-folder text-secondary">
+            <a href="?p=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file ?>">
+                <img src="./assets/images/Folder-icon.png" alt="folder" class="file-item-icon far fa-folder text-secondary">
+            </a>
             
             <a href="?p=<?php echo isset($_GET["p"]) ? $_GET["p"]." ".$file : end($current_path_array)." ".$file ?>" class="file-item-name">
                 <?php echo $file ?>
@@ -66,10 +70,13 @@
                 <input type="checkbox" class="custom-control-input" />
                 <span class="custom-control-label"></span>
             </label>
-            <video style="width : 100%" src="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>"></video>
+            <a href="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>" data-toggle="modal" data-target="#videoPlayer">
+                <img src="./assets/images/video-icon.png" alt="" >
+            </a>
+            <!-- <video style="width : 100%" src="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>"></video> -->
             <!-- <div class="file-item-icon far fa-file-video text-secondary">
             </div> -->
-            <a href="javascript:void(0)" class="file-item-name">
+            <a href="<?php echo $web_url; ?>?dw=<?php  echo ($current_path."/".$file); ?>" class="file-item-name" >
                 <?php echo $file; ?>
             </a>
             <div class="file-item-changed">03/01/2018</div>
@@ -138,7 +145,9 @@
                 <input type="checkbox" class="custom-control-input" />
                 <span class="custom-control-label"></span>
             </label>
-            <img src="<?php echo fm_icon($ext); ?>" alt="folder" class="file-item-icon far fa-folder text-secondary">
+            <a href="<?php echo $web_url; ?>?edit=<?php  echo ($current_path."/".$file); ?>" >
+              <img src="<?php echo fm_icon($ext); ?>" alt="folder" class="file-item-icon far fa-folder text-secondary">
+             </a>
             <a href="<?php echo $web_url; ?>?edit=<?php  echo ($current_path."/".$file); ?>" class="file-item-name" >
                 <?php echo $file ?>
             </a>

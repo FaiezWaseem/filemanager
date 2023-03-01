@@ -112,6 +112,7 @@ function fm_icon($ext){
  }
  function xcopy($source, $dest, $permissions = 0755)
  {
+    
      $sourceHash = hashDirectory($source);
      // Check for symlinks
      if (is_link($source)) {

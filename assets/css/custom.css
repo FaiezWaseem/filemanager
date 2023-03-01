@@ -64,6 +64,20 @@ body{margin-top:20px;}
     display: block;
     overflow: hidden;
 }
+[data-theme='light'] .file-item
+{
+    
+    box-shadow: 0 1px 0 0 #CFD8DC;
+    background: white;
+
+}
+[data-theme='light'] .file-manager-container{
+    background-color: #ECEFF1;
+}
+[data-theme='light']{
+    background-color: #ECEFF1;
+    color: white;
+}
 .file-manager-col-view .file-item {
     margin: 0 0.25rem 0.25rem 0;
     padding: 1.25rem 0 1rem 0;
@@ -218,6 +232,54 @@ body{margin-top:20px;}
 .material-style .file-item.selected .file-item-select-bg {
     opacity: 0.15;
 }
+/* Container  Sidebar*/
+.container-sidebar{
+    width : 24%;
+    height: 92vh;
+    background-color: black;
+    transition: all 1s;
+    border-radius: 1%;
+    margin: 0px 20px 20px 20px;
+    padding: 10px;
+    overflow-y: scroll;
+    /* position: fixed; */
+}
+.menu{
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color:  wheat;
+    padding: 4px;
+    z-index: 560;
+}
+.menu img{
+    width: 30px;
+    height: 30px;
+}
+.container{
+    width: 75% !important;
+    overflow-y: scroll;
+    height: 95vh;
+}
+.main-ext{
+    display: flex;
+}
+.sidebar-folder{
+   display: block;
+   text-decoration: none;
+    color: white !important;
+}
+.sidebar-folder:hover{
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+.breadcrumb{
+    background-color: black !important;
+}
+.modal-body video{
+    max-width: 100%;
+}
 @media (min-width: 768px) {
     .material-style .file-manager-row-view .file-item-changed {
         display: block;
@@ -253,6 +315,7 @@ body{margin-top:20px;}
     .dark-style .file-manager-row-view .file-item-name {
         width: calc(100% - 15rem);
     }
+    
 }
 
 @media (min-width: 992px) {
@@ -288,5 +351,33 @@ body{margin-top:20px;}
     .file-manager-container{
         justify-content: center;
     }
+    .container-sidebar{
+        width: 60%;
+        position: absolute;
+        z-index: 349;
+    }
+    .menu{
+        display: block;
+    }
 
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

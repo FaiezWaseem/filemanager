@@ -7,7 +7,7 @@ if(isset($_GET['file'])){
 }
 // Download file
 if(isset($_GET["dw"])){
-  $file = $_GET["dw"];
+  $file = str_replace('~', ' ',$_GET["dw"]);
 
 if (file_exists($file)) {
   header('Content-Description: File Transfer');
@@ -97,8 +97,8 @@ $files_ext = array(
     'php', 'php4', 'php5', 'phps', 'phtml', 'htm', 'html', 'shtml', 'xhtml', 'xml', 'xsl', 'm3u', 'm3u8', 'pls', 'cue', 'bash', 'tpl', 'vue',
     'eml', 'msg', 'csv', 'bat', 'twig', 'tpl', 'md', 'gitignore', 'less', 'sass', 'scss', 'c', 'cpp', 'cs', 'py', 'go', 'zsh', 'swift', 'yml',
     'map', 'lock', 'dtd', 'svg', 'scss', 'asp', 'aspx', 'asx', 'asmx', 'ashx', 'jsp', 'jspx', 'cfm', 'cgi', 'dockerfile', 'ruby', 'twig',
-    'yml', 'yaml', 'toml', 'md', 'vhost', 'scpt', 'applescript', 'c', 'cs', 'csx', 'cshtml', 'cpp', 'c++', 'coffee', 'cfm', 'rb',
-    'graphql', 'mustache', 'jinja', 'phtml', 'http', 'handlebars', 'lock', 'java', 'es', 'es6', 'markdown', 'wiki', 'vhost', 'sql',
+    'yml', 'yaml', 'toml', 'md', 'vhost', 'scpt', 'applescript', 'c', 'cs', 'csx', 'cshtml', 'cpp', 'c++', 'coffee', 'cfm', 'rb', 'artisan',
+    'graphql', 'mustache', 'jinja', 'phtml', 'http', 'handlebars', 'lock', 'java', 'es', 'es6', 'markdown', 'wiki', 'vhost', 'sql','env','example','jadoo'
 );
 
 
@@ -119,23 +119,24 @@ if(isset($_GET["d"])){
   
   if(!$read_only){
      $file_path = str_replace(" ","/",$_GET["d"]);
+     $file_path = str_replace("~"," ",$file_path);
      $file_path = str_replace(array_slice(explode("/",$root_path), -1)[0],"",$file_path);
      $file_path = $root_path . $file_path;
      if(is_dir($file_path)){
-        if(deleteDirectory($file_path)){
+          if(deleteDirectory($file_path)){
             echo "directory Deleted : ".$file_path;
            }else{
                echo "directory Delete Failed";
            }
-     }else{
-
-         if(unlink($file_path)){
-             echo "File Deleted : ".$file_path;
-            }else{
+        }else{
+              
+              if(unlink($file_path)){
+                echo "File Deleted : ".$file_path;
+              }else{
                 message("File Delete Failed",true);
-            }
+              }
+              fmredirect($web_url."?p=".str_replace(array_slice(explode(" ",$_GET["d"]), -1)[0],"",$_GET["d"])."&frm=1");
         }
-        fmredirect($web_url."?p=".str_replace(array_slice(explode(" ",$_GET["d"]), -1)[0],"",$_GET["d"])."&frm=1");
       }else{
         message("currently in read only mode",true);
       }
@@ -153,7 +154,7 @@ if(isset($_GET["p"])){
 // copy folder/file
 if(isset($_POST["_path"]) && isset($_POST["_dest"]) ){
   if(!$read_only){
-    if(xcopy($_POST["_dest"],$_POST["_path"])){
+    if(xcopy(str_replace('~', ' ',$_POST["_dest"]),str_replace('~', ' ',$_POST["_path"]))){
       message("Folder/file Copied!",false);
     }else{
       message("Folder/file Copied! Failed",true);
@@ -168,7 +169,7 @@ if(isset($_POST["_path"]) && isset($_POST["_dest"]) ){
 // create a new folder
 if(isset($_POST["folderName"]) && isset($_POST["folderPath"])){
   if(!$read_only){
-    if(mkdir($_POST["folderPath"].$_POST["folderName"])){
+    if(mkdir(str_replace('~', ' ',$_POST["folderPath"]).$_POST["folderName"])){
       message($_POST['folderName']." FOLDER CREATED",false);
   }
   }else{
@@ -176,7 +177,7 @@ if(isset($_POST["folderName"]) && isset($_POST["folderPath"])){
   }
 }else if (isset($_POST["fileName"]) && isset($_POST["folderPath"]) && isset($_POST["ftext"])){
   if(!$read_only){
-    $myfile = fopen($_POST["folderPath"].$_POST["fileName"], "w") or die("Unable to open file!");  
+    $myfile = fopen(str_replace('~', ' ',$_POST["folderPath"]).$_POST["fileName"], "w") or die("Unable to open file!");  
     fwrite($myfile, $_POST["ftext"]); 
     fclose($myfile);
     message($_POST['fileName']." FILE CREATED",false);
@@ -188,7 +189,7 @@ if(isset($_POST["folderName"]) && isset($_POST["folderPath"])){
 //  Edit file
 if(isset($_POST["editFileText"]) && isset($_POST["filePath"])){
   if(!$read_only){
-  $myfile = fopen($_POST["filePath"], "w") or die("Unable to open file!");  
+  $myfile = fopen(str_replace('~', ' ',$_POST["filePath"]), "w") or die("Unable to open file!");  
    $text = json_decode($_POST["editFileText"]);
      fwrite($myfile, $text->text); 
      fclose($myfile);
@@ -200,7 +201,7 @@ if(isset($_POST["editFileText"]) && isset($_POST["filePath"])){
 // rename folder/file
 if(isset($_POST["dir"])&&isset($_POST["rfolderName"])){
   if(!$read_only){
-  if(rename($_POST["dir"],$_POST["rfolderPath"].$_POST["rfolderName"])){
+  if(rename(str_replace('~', ' ',$_POST["dir"]),str_replace('~', ' ',$_POST["rfolderPath"]).$_POST["rfolderName"])){
     message("Folder/file Renamed",false);
    }
   }else{
@@ -212,6 +213,7 @@ if(isset($_POST["dir"])&&isset($_POST["rfolderName"])){
 function loadDir($input){
     global $root_path , $current_path , $current_path_array;
     $c_dir = array_slice(explode("/",$root_path), -1)[0]; // extract current Directory name 
+    $c_dir = str_replace('~', ' ', $c_dir);
     $temp =  (explode(" ",str_replace("..","",$input))); 
     unset($temp[0]);
     $current_path = $root_path;
@@ -281,33 +283,41 @@ function loadDir($input){
 
 <?php
 if(!isset($_GET["edit"])){ ?>
+  <div class="menu" onclick="toggle()"><img src="./assets/images/menu.png" alt=""></div>
+  <div class="main-ext">
+  <div class="container-sidebar">
+  <?php include_once("./assets/components/breadcrumps.php"); ?>
+  <?php echo  "Total Free : ".fm_get_filesize(disk_free_space($root_path)). "/".fm_get_filesize(disk_total_space($root_path)); ?>
+      
+</div>
 <div class="container flex-grow-1 light-style container-p-y">
-      <?php 
-      if(isset($_GET["frm"])){
-         echo "<div class='alert alert-primary' role='alert'>
-         FILE/FOLDER DELETED
-       </div>";
-       }
-      ?>
-       <?php include_once("./assets/components/breadcrumps.php"); ?>
-       
-       <div class="file-manager-container file-manager-col-view">
-           <div class="file-manager-row-header">
-               <div class="file-item-name pb-2">Filename</div>
-               <div class="file-item-changed pb-2">Changed</div>
-            </div>
-            
-            <?php include_once("./assets/components/card.php"); ?>
-            
-        </div>
-        <?php echo  "Total Free : ".fm_get_filesize(disk_free_space($root_path)). "/".fm_get_filesize(disk_total_space($root_path)); ?>
-        
-    </div>
+    <?php 
+    if(isset($_GET["frm"])){
+       echo "<div class='alert alert-primary' role='alert'>
+       FILE/FOLDER DELETED
+     </div>";
+     }
+    ?>
+     
+     <div class="file-manager-container file-manager-col-view">
+         <div class="file-manager-row-header">
+             <div class="file-item-name pb-2">Filename</div>
+             <div class="file-item-changed pb-2">Changed</div>
+          </div>
+          
+          <?php include_once("./assets/components/card.php"); ?>
+          
+      </div>
+
+  </div>
+  </div>
+
+
 <?php }?>
 
 <?php
 if(isset($_GET["edit"])){ 
-    echo "file : ".$_GET["edit"];
+    echo "file : ".str_replace('~', ' ',$_GET["edit"]);;
 
     ?>
      <form action="<?php echo $web_url."?edit=".$_GET["edit"]; ?>" method="post" id="fileEdit">
@@ -318,7 +328,7 @@ if(isset($_GET["edit"])){
 </form>
 <div id="editor">
 <?php
-echo fm_enc(file_get_contents($_GET["edit"]));
+echo fm_enc(file_get_contents(str_replace('~', ' ',$_GET["edit"])));
 ?>
 </div>
 
@@ -461,6 +471,28 @@ echo fm_enc(file_get_contents($_GET["edit"]));
 </div>
 
 
+<!-- Video Modal -->
+<div class="modal fade" id="videoPlayer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Video</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <video src="" controls autoplay muted id="vd"></video>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-primary"  value="SAVE" hidden disable>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
 <?php if(isset($_GET["edit"])){ ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/ace.min.js" integrity="sha512-s57ywpCtz+4PU992Bg1rDtr6+1z38gO2mS92agz2nqQcuMQ6IvgLWoQ2SFpImvg1rbgqBKeSEq0d9bo9NtBY0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
@@ -544,7 +576,18 @@ echo fm_enc(file_get_contents($_GET["edit"]));
     folderNameInput[0].value = path;
     $("#copyDir")[0].value = path;
   }
-
+  let isOpen = true
+  function toggle(){
+    let c = document.querySelector(".container-sidebar");
+    c.style.width =  isOpen ? "0%" : "60%";
+    c.style.left =  isOpen ? "-500px" : "0px";
+    isOpen = !isOpen;
+  }
+  document.querySelectorAll(`[data-target="#videoPlayer"]`).forEach( item =>{
+    item.onclick = ()=>{
+       document.getElementById("vd").src = item.href
+      }
+   })
 </script>
 
 <?php }  if($auth && !$is_logged_in){?>
