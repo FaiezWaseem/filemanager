@@ -219,7 +219,7 @@ function loadDir($input){
     $current_path = $root_path;
     foreach ($temp as $key => $value) {
         $current_path = $current_path."/".$value;
-        $current_path_array = explode("/",$current_path);
+        $current_path_array = explode("/",str_replace($root_path,"",$current_path));
     }
 }
 
@@ -298,8 +298,43 @@ if(!isset($_GET["edit"])){ ?>
      </div>";
      }
     ?>
-     
+             <ol class="breadcrumb text-big container-p-x py-3 m-0">
+             <a href="<?php echo '?p=';?>" style="margin-right:10px;"><i class="ion ion-ios-home"></i></a>
+            <?php
+              foreach ($current_path_array as $key => $value) {
+                if($value != array_slice(explode("/",$root_path), -1)[0]){
+                  if($value != ""){
+                      $load_url = explode($value,$current_path);
+                      $load_url = $load_url[0];
+                      $load_url = str_replace($root_path,"",$load_url);
+                      $load_url = str_replace("/"," ",$load_url);
+                      $load_url = $load_url .$value;
+                      $load_url = rtrim($load_url);
+                      $load_url = ltrim($load_url);
+                      $load_url = array_slice(explode("/",$root_path), -1)[0] ." ".$load_url;
+                    }
+                    }else{
+                    $load_url = $value;
+                   }
+
+
+              ?>
+              <?php 
+                if(end($current_path_array) == $value){
+                    echo "<li class='breadcrumb-item active'>$value</li>";
+                }else{       
+              ?>
+            <li class="breadcrumb-item">
+                <a href="?p=<?php echo $load_url;?>"><?php echo $value ?></a>
+            </li>
+            <?php 
+                }
+              } 
+            ?>
+            
+        </ol>
      <div class="file-manager-container file-manager-col-view">
+      
          <div class="file-manager-row-header">
              <div class="file-item-name pb-2">Filename</div>
              <div class="file-item-changed pb-2">Changed</div>
